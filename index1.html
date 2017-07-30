@@ -16,14 +16,20 @@
     </style>
   </head>
   <body bgcolor="#E5E5E5">
-    <div style="width: 100%;text-align: center;"> <h1>Advanced Big Data Analytics - Final Project </h1></div>
-    <div style="width: 100%;text-align: center;"> <h2>Analysis and Predictions on NYC Motor Vehicle Collision Data </h2></div>
-    <div style="width: 100%;text-align: center;"> <h2>konda</h2></div><br><br>
+    <div style="width: 100%;text-align: center;"> <h1>Narrative Visualization - Final Project </h1></div>
+    <div style="width: 100%;text-align: center;"> <h2>Visualization Analysis on NYC Motor Vehicle Collision Data </h2></div>
+    <div style="width: 100%;text-align: center;"> <p>Narrative Visualization project is build on NYC police department Motor Collision Data.</p>
+	<p>1. Visualization analysis number of acciedents happened acorss all boroughs from 2017 to 2012.</p>
+	<p>2. Anaysis accidents in hour of the day. Most of the accidents happened during stress hours.</p>
+	<p>3. Compares accidents happened by vehicle type</p>
+	<p>4. Compare reason to cause accidents.</p>
+	</div><br><br>
 
-    <!-- div style="width: 100%;text-align: center;"> <h2>Heat Map of all accidents across all five boroughs</h2></div>
-    <div id="map"></div -->
+    <div style="width: 100%;text-align: center;"> <h2>Distribution of accidents across all Boroughs</h2></div>
+	<div style="width: 100%;text-align: center;"> <h5> To see the causes of accidents by borough in each year, click on its Bar and filter by Year on X-Axis</h5></div>
+    <div id="yearly"></div>
     <div style="width: 100%;text-align: center;"> <h2>Distribution of accidents across all boroughs over time of the day </h2></div>
-    <div style="width: 100%;text-align: center;"> <h4> To see the causes of accidents in a borough, click on its bar. </h4></div>
+    <div style="width: 100%;text-align: center;"> <h4> To see the causes of accidents in a borough, click on its Bar and filter by Borough on X-Axis </h4></div>
     <div id="boroughtimes"></div>
     <div id="headingforcontrib" style="width: 100%;text-align: center;visibility: hidden;"> <h2> Causes of accidents </h2></div>
     <div id="containerforboroughfactors" style="visibility: hidden;"> 
@@ -42,8 +48,8 @@
     <div id="boroughsinavehicleheading" style="width: 100%;text-align: center;visibility: hidden;"><h2>Distribution across boroughs<h2></div>
     <div id="boroughsinavehicle" style="visibility:hidden;"></div>
     <br>
-    <div id="boroughsinavehicleheading" style="width: 100%;text-align: center;"><h2>Weather Conditions on the days when most number of accidents occurred in the last three years<h2></div>
-    <div id="dangdates"></div>
+    <!-- div id="boroughsinavehicleheading" style="width: 100%;text-align: center;"><h2>Weather Conditions on the days when most number of accidents occurred in the last three years<h2></div>
+    <div id="dangdates"></div -->
     <!-- div id="boroughsinavehicleheading" style="width: 100%;text-align: center;"><h2>Gaussian Mixture Model on Accident Data - 4 Clusters<h2>
       <img src="gmm.png" style="width: 100%;"></div -->
    
@@ -53,6 +59,53 @@
   
     <script>
     
+	var chart1 = c3.generate({
+        bindto: '#yearly',
+        data: {
+        url: 'yearly.csv',
+        type : 'bar',
+        onclick: function (d, i) { 
+            console.log("onclick", d, i);
+             var filename = d.name.split('/')[0];
+             console.log(filename); 
+             var name = "factorsInABorough/" + filename + "contribfactor.csv";
+             console.log(name);
+             document.getElementById("containerforboroughfactors").style.visibility= 'hidden';
+             document.getElementById("containerforboroughfactors").style.visibility= 'visible';
+             document.getElementById("headingforcontrib").style.visibility= 'visible';
+              var chart15 = c3.generate({
+              bindto: '#containerforboroughfactors',
+              data: {
+              url: name,
+              type : 'donut',
+              },
+              donut: {
+                    title: d.name
+              },
+                 size : {
+                height : 500,
+              }
+              });
+          }
+        },
+        size: {
+        height: 500,
+        },
+		axis: {
+        x: {
+            type : 'categorized',
+            categories: ['BRONX','BROOKLYN','MANHATTAN','QUEENS','STATEN ISLAND','Others'],
+            label: {
+                    text: 'No. Accidents by year in Borough',
+                    position: 'outer-center'
+                   },
+            height: 50
+           },
+		y: {
+		   label: 'No. of Accidents'
+		}
+    }
+      });
 
        
       var chart1 = c3.generate({
@@ -86,6 +139,20 @@
         },
         size: {
         height: 500,
+        },
+		axis: {
+        x: {
+            type : 'categorized',
+            categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+            label: {
+                    text: 'Hour in a Day',
+                    position: 'outer-center'
+                   },
+            height: 50
+           },
+		y: {
+		   label: 'No. of Accidents'
+		   }
         }
       });
       var chart2 = c3.generate({
@@ -118,6 +185,11 @@
         },
         size: {
           height: 600,
+        },
+		axis: {
+        x: {
+            height: 50
+           }
         }
       });
 
